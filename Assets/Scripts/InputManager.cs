@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TiltButton { Left = -1, Right = 1, None = 0 }
+
 public class InputManager : MonoBehaviour
 {
     [SerializeField]
@@ -15,12 +17,18 @@ public class InputManager : MonoBehaviour
 
     private float minDragDistance = 0.01f;
     private float maxDragDistance = 0.3f;
+    private float maxYDistance = 0.3f;
 
     [SerializeField]
     private LineRenderer debugLine;
 
     public Vector3 dragDirection;
     public float percentageOfMaxDragDistance = 0.0f;
+    public float percentageOfMaxYDistance = 0.0f;
+
+    public string objectClicked = "";
+
+    public TiltButton tiltButtonClicked = TiltButton.None;
 
     // Update is called once per frame
     void Update()
@@ -36,8 +44,18 @@ public class InputManager : MonoBehaviour
         Ray ray = this.frameCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, this.clickDetectableMask))
+        if (Physics.Raycast(ray, out hit))
         {
+            this.objectClicked = hit.collider.gameObject.tag;
+
+            if (this.objectClicked == "TiltButton")
+            {
+                this.tiltButtonClicked = this.frameCamera.ScreenToViewportPoint(Input.mousePosition).x < 0.5f ? TiltButton.Left : TiltButton.Right;
+                //Debug.LogError("Tilt button clicked: " + this.tiltButtonClicked);
+            }
+
+            //Debug.LogError("Object: " + hit.collider.gameObject.name + " Tag: " + this.objectClicked);
+
             if (this.dragCoroutine == null)
             {
                 StartCoroutine(this.UpdateDrag());
@@ -60,32 +78,28 @@ public class InputManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             Vector3 newMousePosition = this.frameCamera.ScreenToViewportPoint(Input.mousePosition);
 
-            //Debug.LogError("Initial: " + initialMousePosition + " New: " + newMousePosition);
-
             if (this.GetDistance(initialMousePosition, newMousePosition) >= this.minDragDistance)
             {
                 this.currentDragDistance = Vector3.Distance(this.clickStartingPosition, newMousePosition);
-
-                //Debug.LogError("CurrentDragDistance: " + this.currentDragDistance);
 
                 if (this.currentDragDistance > this.maxDragDistance)
                 {
                     this.currentDragDistance = this.maxDragDistance;
                 }
 
-                Debug.LogError("CurrentDragDistance: " + this.currentDragDistance);
+                //Debug.LogError("CurrentDragDistance: " + this.currentDragDistance);
             }
 
             this.dragDirection = (newMousePosition - this.clickStartingPosition).normalized;
             this.percentageOfMaxDragDistance = this.currentDragDistance / this.maxDragDistance;
-            //Vector3 terminatingPoint = this.clickStartingPosition +(this.dragDirection * this.currentDragDistance);
+            this.percentageOfMaxYDistance = Mathf.Abs((newMousePosition - this.clickStartingPosition).y) / this.maxYDistance;
 
-            //this.debugLine.SetPosition(0, Camera.main.ViewportToWorldPoint(this.clickStartingPosition));
-            //this.debugLine.SetPosition(1, Camera.main.ViewportToWorldPoint(terminatingPoint));
+            //Debug.LogError("Percentage: " + this.percentageOfMaxYDistance);
         }
 
         this.dragDirection = Vector3.zero;
         this.percentageOfMaxDragDistance = 0.0f;
+        this.percentageOfMaxYDistance = 0.0f;
         this.clickStartingPosition = Vector3.zero;
         this.currentDragDistance = 0;
 
