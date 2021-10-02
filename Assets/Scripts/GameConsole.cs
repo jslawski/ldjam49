@@ -39,7 +39,7 @@ public class GameConsole : MonoBehaviour
         this.maxYViewport = 0.5f + this.maxYDiff;
 
         Vector3 moveDirection = new Vector3(this.maxXDiff * this.currentInput.dragDirection.x, 
-            this.maxYDiff * this.currentInput.dragDirection.y, this.frameCamera.nearClipPlane) + new Vector3(0.5f, 0.5f, this.frameCamera.nearClipPlane);
+            this.maxYDiff * this.currentInput.dragDirection.y, this.frameCamera.nearClipPlane) + new Vector3(0.5f, 0.5f, 0f);
 
         moveDirection = this.frameCamera.ViewportToWorldPoint(moveDirection);
 
