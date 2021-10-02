@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: Fix the distance, it's way to big!  Why?
-
 public class InputManager : MonoBehaviour
 {
     [SerializeField]
@@ -15,47 +13,31 @@ public class InputManager : MonoBehaviour
 
     private Coroutine dragCoroutine = null;
 
-    private float minDragDistance = 0.5f;
-    private float maxDragDistance = 5f;
+    private float minDragDistance = 0.01f;
+    private float maxDragDistance = 0.3f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private LineRenderer debugLine;
+
+    public Vector3 dragDirection;
+    public float percentageOfMaxDragDistance = 0.0f;
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0) == true)
         {
-            Debug.LogError("Click Detected!");
             this.CastRay();
         }
     }
-
-    /*private void OnMouseDown()
-    {
-        Debug.LogError("Click Detected!");
-
-        if (this.dragCoroutine == null)
-        {
-            this.clickStartingPosition = Input.mousePosition;
-            this.dragCoroutine = StartCoroutine(this.UpdateDrag());
-        }
-    }*/
 
     private void CastRay()
     {
         Ray ray = this.frameCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        Debug.LogError("Casting Ray");
-
         if (Physics.Raycast(ray, out hit, this.clickDetectableMask))
         {
-            Debug.LogError("Ray hit");
-
             if (this.dragCoroutine == null)
             {
                 StartCoroutine(this.UpdateDrag());
@@ -70,33 +52,42 @@ public class InputManager : MonoBehaviour
 
     private IEnumerator UpdateDrag()
     {
+        this.clickStartingPosition = this.frameCamera.ScreenToViewportPoint(Input.mousePosition);
+
         while (Input.GetMouseButton(0))
         {
-            Debug.LogError("Dragging");
-
-            Vector3 initialMousePosition = Input.mousePosition;
+            Vector3 initialMousePosition = this.frameCamera.ScreenToViewportPoint(Input.mousePosition);
             yield return new WaitForSeconds(0.1f);
-            Vector3 newMousePosition = Input.mousePosition;
+            Vector3 newMousePosition = this.frameCamera.ScreenToViewportPoint(Input.mousePosition);
+
+            //Debug.LogError("Initial: " + initialMousePosition + " New: " + newMousePosition);
 
             if (this.GetDistance(initialMousePosition, newMousePosition) >= this.minDragDistance)
             {
                 this.currentDragDistance = Vector3.Distance(this.clickStartingPosition, newMousePosition);
 
-                Debug.LogError("CurrentDragDistance: " + this.currentDragDistance);
+                //Debug.LogError("CurrentDragDistance: " + this.currentDragDistance);
 
                 if (this.currentDragDistance > this.maxDragDistance)
                 {
                     this.currentDragDistance = this.maxDragDistance;
                 }
 
-                //Debug.LogError("CurrentDragDistance: " + this.currentDragDistance);
+                Debug.LogError("CurrentDragDistance: " + this.currentDragDistance);
             }
 
-            Vector3 terminatingPoint = this.clickStartingPosition +
-                (((newMousePosition - this.clickStartingPosition).normalized) * this.maxDragDistance);
+            this.dragDirection = (newMousePosition - this.clickStartingPosition).normalized;
+            this.percentageOfMaxDragDistance = this.currentDragDistance / this.maxDragDistance;
+            //Vector3 terminatingPoint = this.clickStartingPosition +(this.dragDirection * this.currentDragDistance);
 
-            Debug.DrawLine(this.frameCamera.ScreenToWorldPoint(this.clickStartingPosition), this.frameCamera.ScreenToWorldPoint(terminatingPoint), Color.red, 0.1f);
+            //this.debugLine.SetPosition(0, Camera.main.ViewportToWorldPoint(this.clickStartingPosition));
+            //this.debugLine.SetPosition(1, Camera.main.ViewportToWorldPoint(terminatingPoint));
         }
+
+        this.dragDirection = Vector3.zero;
+        this.percentageOfMaxDragDistance = 0.0f;
+        this.clickStartingPosition = Vector3.zero;
+        this.currentDragDistance = 0;
 
         this.dragCoroutine = null;
     }
