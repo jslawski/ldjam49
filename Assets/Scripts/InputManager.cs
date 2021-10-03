@@ -18,6 +18,7 @@ public class InputManager : MonoBehaviour
     private float minDragDistance = 0.01f;
     private float maxDragDistance = 0.3f;
     private float maxYDistance = 0.3f;
+    private float maxXDistance = 0.3f;
 
     [SerializeField]
     private LineRenderer debugLine;
@@ -25,6 +26,7 @@ public class InputManager : MonoBehaviour
     public Vector3 dragDirection;
     public float percentageOfMaxDragDistance = 0.0f;
     public float percentageOfMaxYDistance = 0.0f;
+    public float percentageOfMaxXDistance = 0.0f;
 
     public string objectClicked = "";
 
@@ -98,6 +100,7 @@ public class InputManager : MonoBehaviour
             this.dragDirection = (newMousePosition - this.clickStartingPosition).normalized;
             this.percentageOfMaxDragDistance = this.currentDragDistance / this.maxDragDistance;
             this.percentageOfMaxYDistance = Mathf.Abs((newMousePosition - this.clickStartingPosition).y) / this.maxYDistance;
+            this.percentageOfMaxXDistance = Mathf.Abs((newMousePosition - this.clickStartingPosition).x) / this.maxXDistance;
 
             //Debug.LogError("Percentage: " + this.percentageOfMaxYDistance);
         }
@@ -105,6 +108,7 @@ public class InputManager : MonoBehaviour
         this.dragDirection = Vector3.zero;
         this.percentageOfMaxDragDistance = 0.0f;
         this.percentageOfMaxYDistance = 0.0f;
+        this.percentageOfMaxXDistance = 0.0f;
         this.clickStartingPosition = Vector3.zero;
         this.currentDragDistance = 0;
 
