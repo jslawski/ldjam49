@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameConsole : MonoBehaviour
 {
@@ -32,12 +33,33 @@ public class GameConsole : MonoBehaviour
     private float smoothTime = 0.1f;
     private Vector3 tempVel = Vector3.zero;
 
+    private LevelManipulator levelGeometry;
+
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(this.LoadGameScene());
+
         this.maxXViewport = 0.5f + this.maxXDiff;
         this.maxYViewport = 0.5f + this.maxYDiff;
         this.centerPoint = this.frameCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, this.frameCamera.nearClipPlane));
+    }
+
+    private IEnumerator LoadGameScene()
+    {
+        SceneManager.LoadScene("GameplayScene", LoadSceneMode.Additive);
+
+        while (SceneManager.sceneCount < 2)
+        {
+            Debug.LogError("Iterate");
+            yield return null;
+        }
+
+        yield return null;
+
+        //GameObject test = GameObject.FindGameObjectWithTag("LevelParent");
+
+        this.levelGeometry = GameObject.Find("LevelPivot").GetComponent<LevelManipulator>();
     }
 
     // Update is called once per frame
@@ -70,6 +92,8 @@ public class GameConsole : MonoBehaviour
         this.velocity -= (this.velocity * this.damp * Time.deltaTime);
 
         this.transform.position += (this.velocity * Time.deltaTime);
+
+        this.levelGeometry.TranslateLevel(this.velocity);
     }
 
     private void RotateConsole()
@@ -89,7 +113,7 @@ public class GameConsole : MonoBehaviour
 
         targetAngle = Mathf.Lerp(0, this.maxRotation, this.currentInput.percentageOfMaxYDistance) * tiltDirection;
 
-        Debug.LogError("Target Angle: " + targetAngle);
+        //Debug.LogError("Target Angle: " + targetAngle);
 
         Vector3 targetRotation = new Vector3(this.transform.rotation.x,
             this.transform.rotation.y,
@@ -99,32 +123,30 @@ public class GameConsole : MonoBehaviour
             Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z), 
             10.0f * Time.deltaTime);
 
-        //this.transform.eulerAngles = Mathf.SmoothDampAngle(this.transform.eulerAngles, targetRotation, ref tempVel, this.smoothTime);
-
-        /*Debug.LogError("Target Angle: " + targetAngle);
-
-        float unsignedAngleVelocity = (targetAngle - this.transform.eulerAngles.z);
-
-        this.angleVelocity += ((targetAngle * Time.deltaTime) * tiltDirection);
-        this.angleVelocity -= (this.angleVelocity * 5f * Time.deltaTime);
-
-        if (this.angleVelocity < 0)
+        /*if (Mathf.Abs(this.transform.rotation.eulerAngles.z - targetRotation.z) < 0.01f)
         {
-            Debug.LogError("NEGATIVE");
-        }
+            this.transform.rotation = Quaternion.Euler(targetRotation.x, targetRotation.y, 0f);
+           
+            if (this.levelGeometry.levelPivotObject != null)
+            {
+                Debug.LogError("TRIGGERED");
+                this.levelGeometry.RotateLevel(targetRotation);
+                this.levelGeometry.DestroyPivot();
+            }
+            
+            return;
+        }*/
 
-        Vector3 targetRotation = new Vector3(this.transform.rotation.x, 
-            this.transform.rotation.y, 
-            this.transform.rotation.z * (angleVelocity * Time.deltaTime));
-
-        this.transform.eulerAngles = new Vector3(this.transform.rotation.eulerAngles.x,
-            this.transform.rotation.eulerAngles.y,
-            this.transform.rotation.eulerAngles.z + (this.angleVelocity * Time.deltaTime));
-        */
+        this.levelGeometry.RotateLevel(targetRotation);
     }
 
     private void ResetRotation()
     {
+        /*if (this.transform.rotation.eulerAngles.z <= 0.001f)
+        {
+            return;
+        }*/
+
         float tiltDirection = this.transform.rotation.eulerAngles.z;
 
         float targetAngle = 0.0f;
@@ -145,5 +167,21 @@ public class GameConsole : MonoBehaviour
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation,
             Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z),
             10.0f * Time.deltaTime);
+
+        /*if (Mathf.Abs(this.transform.rotation.eulerAngles.z - targetRotation.z) < 0.01f)
+        {
+            this.transform.rotation = Quaternion.Euler(targetRotation.x, targetRotation.y, 0f);
+
+            if (this.levelGeometry.levelPivotObject != null)
+            {
+                Debug.LogError("TRIGGERED IN RESET");
+                this.levelGeometry.RotateLevel(targetRotation);
+                this.levelGeometry.DestroyPivot();
+            }
+
+            return;
+        }
+        */
+        this.levelGeometry.RotateLevel(targetRotation);
     }
 }
