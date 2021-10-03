@@ -30,6 +30,9 @@ public class TablePhysics : MonoBehaviour
     private float maxTiltAcceleration = 20f;
     private float currentTiltAcceleration = 0f;
 
+    private bool shouldFlip = false;
+    private float flipMagnitude = 30f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +46,9 @@ public class TablePhysics : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 3.0f) == false)
+        bool isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 3.0f);
+
+        if (isAirborne == true)
         {
             this.customGravityOn = true;
             Debug.LogError("AIRBORNE");
@@ -75,23 +80,16 @@ public class TablePhysics : MonoBehaviour
             this.isTilted = false;
         }
 
-        /*if (this.tableRb.SweepTest(Vector3.left, out hit, this.impulseForceDistance) && 
-            this.tableRb.velocity.x > this.minSpeedForForceTrigger)
+        //If upside down in the air
+        if (isAirborne && this.transform.up.y < -0.5f)
         {
-            this.shouldImpulseForce = true;
-            this.impulseDirection = Vector3.right;
-
-            Debug.LogError("Velocity: " + this.tableRb.velocity);
-        }*/
-
-        /*if (this.tableRb.SweepTest(Vector3.right, out hit, this.impulseForceDistance) &&
-            Mathf.Abs(this.tableRb.velocity.x) > this.minSpeedForForceTrigger)
+            Debug.LogError("Should flip!");
+            this.shouldFlip = true;
+        }
+        else
         {
-            this.shouldImpulseForce = true;
-            this.impulseDirection = Vector3.left;
-
-            Debug.LogError("Velocity: " + this.tableRb.velocity);
-        }*/
+            this.shouldFlip = false;
+        }
     }
 
     private void FixedUpdate()
@@ -100,13 +98,7 @@ public class TablePhysics : MonoBehaviour
         {
             this.tableRb.AddForce(-Vector3.up * this.customGravity, ForceMode.Acceleration);
         }
-
-        /*if (this.shouldImpulseForce == true)
-        {
-            this.shouldImpulseForce = false;
-            this.tableRb.AddForce(this.impulseDirection * this.impulseForceMagnitude, ForceMode.Impulse);
-        }
-        */
+       
         if (this.isTilted)
         {
             this.tableRb.AddForce(this.levelGeometry.transform.right * this.tiltDirection * this.currentTiltAcceleration, ForceMode.Acceleration); ;
@@ -116,6 +108,14 @@ public class TablePhysics : MonoBehaviour
         {
             Debug.LogError("LIMITED");
             this.tableRb.velocity = this.tableRb.velocity.normalized * this.maxSpeed;
+        }
+
+        if (this.shouldFlip == true)
+        {
+            Vector3 forceDirection = new Vector3(0f, this.currentInput.dragDirection.y, 0f);
+            Vector3 forcePosition = new Vector3(this.transform.position.x - this.currentInput.dragDirection.x, 0f, 0f);
+
+            this.tableRb.AddForceAtPosition(forceDirection * this.flipMagnitude, forcePosition);
         }
     }
 }
