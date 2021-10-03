@@ -75,7 +75,7 @@ public class InputManager : MonoBehaviour
         while (Input.GetMouseButton(0))
         {
             Vector3 initialMousePosition = this.frameCamera.ScreenToViewportPoint(Input.mousePosition);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01f);
             Vector3 newMousePosition = this.frameCamera.ScreenToViewportPoint(Input.mousePosition);
 
             if (this.GetDistance(initialMousePosition, newMousePosition) >= this.minDragDistance)

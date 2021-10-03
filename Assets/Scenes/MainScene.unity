@@ -315,7 +315,6 @@ MonoBehaviour:
   maxXDiff: 0.08
   maxRotation: 20
   currentInput: {fileID: 1383218727}
-  moveSpeed: 0.5
   damp: 15
 --- !u!1 &431560751
 GameObject:

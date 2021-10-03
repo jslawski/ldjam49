@@ -13,9 +13,9 @@ public class LevelManipulator : MonoBehaviour
     //private GameObject levelPivotInstance;
     private Rigidbody levelPivotRb;
 
-    private float translateAmplifier = 10f;
-    private float rotateAmplifier = 1.5f;
-    private float rotateSpeedAmplifier = 15f;
+    private float translateAmplifier = 2f;
+    private float rotateAmplifier = 1f;
+    private float rotateSpeedAmplifier = 5f;
 
     [SerializeField]
     private Camera gameCamera;

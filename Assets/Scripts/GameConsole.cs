@@ -24,8 +24,6 @@ public class GameConsole : MonoBehaviour
     private float minYViewport;
     private float maxYViewport;
 
-    public float moveSpeed = 0.5f;
-
     private Vector3 velocity = Vector3.zero;
     private float angleVelocity = 0;
     public float damp = 5f;
@@ -38,6 +36,8 @@ public class GameConsole : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = 60;
+
         StartCoroutine(this.LoadGameScene());
 
         this.maxXViewport = 0.5f + this.maxXDiff;
@@ -63,7 +63,7 @@ public class GameConsole : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (this.currentInput.objectClicked == "ConsoleScreen")
         {
@@ -88,10 +88,10 @@ public class GameConsole : MonoBehaviour
 
         targetPosition = new Vector3(targetPosition.x, targetPosition.y, this.transform.position.z);
 
-        this.velocity += targetPosition - this.transform.position;
-        this.velocity -= (this.velocity * this.damp * Time.deltaTime);
+        this.velocity += 10f * (targetPosition - this.transform.position);
+        this.velocity -= (this.velocity * this.damp * Time.fixedDeltaTime);
 
-        this.transform.position += (this.velocity * Time.deltaTime);
+        this.transform.position += (this.velocity * Time.fixedDeltaTime);
 
         this.levelGeometry.TranslateLevel(this.velocity);
     }
@@ -121,7 +121,7 @@ public class GameConsole : MonoBehaviour
 
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, 
             Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z), 
-            10.0f * Time.deltaTime);
+            10.0f * Time.fixedDeltaTime);
 
         /*if (Mathf.Abs(this.transform.rotation.eulerAngles.z - targetRotation.z) < 0.01f)
         {
@@ -166,7 +166,7 @@ public class GameConsole : MonoBehaviour
 
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation,
             Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z),
-            10.0f * Time.deltaTime);
+            10.0f * Time.fixedDeltaTime);
 
         /*if (Mathf.Abs(this.transform.rotation.eulerAngles.z - targetRotation.z) < 0.01f)
         {
