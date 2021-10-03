@@ -37,6 +37,11 @@ public class InputManager : MonoBehaviour
         {
             this.CastRay();
         }
+
+        if (Input.GetMouseButtonUp(0) == true)
+        {
+            this.objectClicked = "";
+        }
     }
 
     private void CastRay()

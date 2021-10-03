@@ -72,16 +72,27 @@ public class GameConsole : MonoBehaviour
         if (this.currentInput.objectClicked == "ConsoleScreen")
         {
             this.TranslateConsole();
-            this.ResetRotation();
+            //this.ResetRotation();
         }
         else if (this.currentInput.objectClicked == "TiltButton")
         {
             this.RotateConsole();
         }
+        else
+        {
+            this.TranslateConsole();
+            this.ResetRotation();
+        }
+
     }
 
     private void TranslateConsole()
     {
+        if (this.levelGeometry == null)
+        {
+            return;
+        }
+
         Vector3 moveDirection = new Vector3(this.maxXDiff * this.currentInput.dragDirection.x,
             this.maxYDiff * this.currentInput.dragDirection.y, this.frameCamera.nearClipPlane) + new Vector3(0.5f, 0.5f, 0f);
 
@@ -146,10 +157,10 @@ public class GameConsole : MonoBehaviour
 
     private void ResetRotation()
     {
-        /*if (this.transform.rotation.eulerAngles.z <= 0.001f)
+        if (this.transform.rotation.eulerAngles.z <= 0.001f)
         {
             return;
-        }*/
+        }
 
         float tiltDirection = this.transform.rotation.eulerAngles.z;
 
@@ -186,6 +197,6 @@ public class GameConsole : MonoBehaviour
             return;
         }
         */
-        //this.levelGeometry.RotateLevel(targetRotation);
+        this.levelGeometry.RotateLevel(targetRotation);
     }
 }

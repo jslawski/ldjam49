@@ -15,7 +15,7 @@ public class LevelManipulator : MonoBehaviour
 
     private float translateAmplifier = 1.5f;
     private float rotateAmplifier = 1f;
-    private float rotateSpeedAmplifier = 5f;
+    private float rotateSpeedAmplifier = 3f;
 
     [SerializeField]
     private Camera gameCamera;
@@ -76,7 +76,7 @@ public class LevelManipulator : MonoBehaviour
 
         float rotationAngle = targetRotation.z;
 
-        Quaternion rotationQ = Quaternion.Euler(new Vector3(0,0,Mathf.DeltaAngle(this.levelParent.transform.eulerAngles.z, rotationAngle)) * this.rotateSpeedAmplifier * Time.fixedDeltaTime);
+        Quaternion rotationQ = Quaternion.Euler(new Vector3(0,0,Mathf.DeltaAngle(this.levelParent.transform.eulerAngles.z, rotationAngle) * this.rotateAmplifier) * this.rotateSpeedAmplifier * Time.fixedDeltaTime);
         Vector3 translationVector = this.levelPivotRb.transform.position - rotationPoint;
 
         this.levelPivotRb.MovePosition(rotationQ * translationVector + rotationPoint);
