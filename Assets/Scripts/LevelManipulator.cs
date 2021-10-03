@@ -13,7 +13,7 @@ public class LevelManipulator : MonoBehaviour
     //private GameObject levelPivotInstance;
     private Rigidbody levelPivotRb;
 
-    private float translateAmplifier = 2f;
+    private float translateAmplifier = 1.5f;
     private float rotateAmplifier = 1f;
     private float rotateSpeedAmplifier = 5f;
 
@@ -69,58 +69,18 @@ public class LevelManipulator : MonoBehaviour
 
     public void RotateLevel(Vector3 targetRotation)
     {
-        Vector3 rotationPoint = new Vector3(this.gameCamera.transform.position.x, this.gameCamera.transform.position.y, this.gameCamera.transform.position.z);
+        Vector3 rotationPoint = new Vector3(
+            this.gameCamera.transform.position.x, 
+            this.gameCamera.transform.position.y, 
+            this.transform.position.z);
 
-        Quaternion rotationQ = Quaternion.Euler(targetRotation * this.rotateSpeedAmplifier * Time.fixedDeltaTime);
+        float rotationAngle = targetRotation.z;
 
+        Quaternion rotationQ = Quaternion.Euler(new Vector3(0,0,Mathf.DeltaAngle(this.levelParent.transform.eulerAngles.z, rotationAngle)) * this.rotateSpeedAmplifier * Time.fixedDeltaTime);
         Vector3 translationVector = this.levelPivotRb.transform.position - rotationPoint;
 
-        if (this.levelPivotRb.rotation.eulerAngles.z < GameConsole.maxRotation &&
-            this.levelPivotRb.rotation.eulerAngles.z < targetRotation.z)
-        {
-            //Debug.LogError("I am here: " + Mathf.Abs(this.levelPivotRb.rotation.eulerAngles.z - targetRotation.z));
-            this.levelPivotRb.MovePosition(rotationQ * (translationVector) + rotationPoint);
-            this.levelPivotRb.MoveRotation((this.levelPivotRb.transform.rotation * rotationQ));
-
-            //this.levelPivotRb.MoveRotation(Quaternion.Slerp(this.transform.rotation,
-            //    this.levelPivotRb.transform.rotation * rotationQ, this.rotateSpeedAmplifier * Time.deltaTime));
-        }
-        else if (this.levelPivotRb.rotation.eulerAngles.z > targetRotation.z)
-        {
-            rotationQ = Quaternion.Euler((targetRotation - this.levelPivotRb.transform.rotation.eulerAngles) * this.rotateSpeedAmplifier * Time.fixedDeltaTime);
-            this.levelPivotRb.MovePosition(rotationQ * (translationVector) + rotationPoint);
-            this.levelPivotRb.MoveRotation((this.levelPivotRb.transform.rotation * rotationQ));
-        }
-
-        /*
-        else if (Mathf.Abs((360 - this.transform.rotation.eulerAngles.z) + targetRotation.z) < GameConsole.maxRotation)
-        {
-            this.levelPivotRb.MovePosition(rotationQ * (translationVector) + rotationPoint);
-            this.levelPivotRb.MoveRotation((this.levelPivotRb.transform.rotation * rotationQ));
-        }
-        */
-
-        /*if (this.levelPivotInstance == null)
-        {
-            this.SetupPivot();
-        }*/
-
-        //JANK BUT WORKS
-        /*
-        Vector3 pivotPosition = new Vector3(CameraFollow.instance.playerCharacter.transform.position.x, 
-            CameraFollow.instance.playerCharacter.transform.position.y, 
-            this.transform.position.z); 
-
-        this.levelPivotRb.MoveRotation(Quaternion.Slerp(this.transform.rotation,
-            Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z),
-            this.rotateSpeedAmplifier * Time.deltaTime));
-            */
-
-
-        /*if (Mathf.Abs(this.levelPivotRb.rotation.eulerAngles.z - targetRotation.z) < 0.1f)
-        {
-            this.levelPivotRb.rotation = Quaternion.Euler(targetRotation.x, targetRotation.y, 0f);
-        }*/
+        this.levelPivotRb.MovePosition(rotationQ * translationVector + rotationPoint);
+        this.levelPivotRb.MoveRotation(this.levelPivotRb.transform.rotation * rotationQ);
     }
 
     /*private void SetupPivot()

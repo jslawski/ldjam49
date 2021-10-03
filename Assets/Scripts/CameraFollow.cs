@@ -120,7 +120,7 @@ public class CameraFollow : MonoBehaviour
             (playerViewportYPosition <= (0.0f + this.verticalViewportThreshold));
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (this.playerCharacter == null)
         {
