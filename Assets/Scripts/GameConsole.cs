@@ -11,8 +11,8 @@ public class GameConsole : MonoBehaviour
     private float maxYDiff = 0.18f;
     [SerializeField]
     private float maxXDiff = 0.08f;
-    [SerializeField]
-    private float maxRotation = 20f;
+   
+    public static float maxRotation = 20f;
 
     [SerializeField]
     private InputManager currentInput;
@@ -32,6 +32,8 @@ public class GameConsole : MonoBehaviour
     private Vector3 tempVel = Vector3.zero;
 
     private LevelManipulator levelGeometry;
+
+    private float rotateSpeed = 10f;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +62,8 @@ public class GameConsole : MonoBehaviour
         //GameObject test = GameObject.FindGameObjectWithTag("LevelParent");
 
         this.levelGeometry = GameObject.Find("LevelPivot").GetComponent<LevelManipulator>();
+        CameraFollow.instance.playerCharacter = GameObject.Find("Table");
+        CameraFollow.instance.playerRb = CameraFollow.instance.playerCharacter.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -111,10 +115,10 @@ public class GameConsole : MonoBehaviour
             tiltDirection = -1;
         }
 
-        targetAngle = Mathf.Lerp(0, this.maxRotation, this.currentInput.percentageOfMaxYDistance) * tiltDirection;
+        targetAngle = Mathf.Lerp(0, maxRotation, this.currentInput.percentageOfMaxYDistance) * tiltDirection;
 
         //Debug.LogError("Target Angle: " + targetAngle);
-
+ 
         Vector3 targetRotation = new Vector3(this.transform.rotation.x,
             this.transform.rotation.y,
             this.transform.rotation.z + targetAngle);
@@ -122,7 +126,7 @@ public class GameConsole : MonoBehaviour
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, 
             Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z), 
             10.0f * Time.fixedDeltaTime);
-
+       
         /*if (Mathf.Abs(this.transform.rotation.eulerAngles.z - targetRotation.z) < 0.01f)
         {
             this.transform.rotation = Quaternion.Euler(targetRotation.x, targetRotation.y, 0f);
@@ -182,6 +186,6 @@ public class GameConsole : MonoBehaviour
             return;
         }
         */
-        this.levelGeometry.RotateLevel(targetRotation);
+        //this.levelGeometry.RotateLevel(targetRotation);
     }
 }
