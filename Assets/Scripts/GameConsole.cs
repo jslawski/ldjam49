@@ -35,16 +35,61 @@ public class GameConsole : MonoBehaviour
 
     private float rotateSpeed = 10f;
 
+    [SerializeField]
+    private MeshRenderer gameScreen;
+    [SerializeField]
+    private Material cutsceneRenderTexture;
+    [SerializeField]
+    private Material gameplayRenderTexture;
+
+    private bool cutsceneFinished = false;
+
+    //Cutscene stuff
+    private Coroutine transitionCoroutine;
+    private float timeBeforeZoomOut = 4.0f;
+    private float zoomOutSpeed = 3.0f;
+    private float cutsceneCameraSize = 3.3f;
+    private float gameplayCameraSize = 6.0f;
+
     // Start is called before the first frame update
     void Start()
     {
         Application.targetFrameRate = 60;
 
-        StartCoroutine(this.LoadGameScene());
-
         this.maxXViewport = 0.5f + this.maxXDiff;
         this.maxYViewport = 0.5f + this.maxYDiff;
         this.centerPoint = this.frameCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, this.frameCamera.nearClipPlane));
+
+        if (GameManager.instance.currentState == GameState.Cutscene)
+        {
+            this.gameScreen.material = this.cutsceneRenderTexture;
+            this.frameCamera.orthographicSize = this.cutsceneCameraSize;
+            StartCoroutine(this.TransitionFromCutscene());
+        }
+    }
+
+    public void ReloadLevel()
+    {
+        StartCoroutine(this.LoadGameScene());
+    }
+
+    private IEnumerator TransitionFromCutscene()
+    {
+        yield return new WaitForSeconds(this.timeBeforeZoomOut);
+
+        while (Mathf.Abs(this.frameCamera.orthographicSize - this.gameplayCameraSize) > 0.01f)
+        {
+            this.frameCamera.orthographicSize = Mathf.Lerp(
+                this.frameCamera.orthographicSize, 
+                this.gameplayCameraSize, 
+                this.zoomOutSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        this.frameCamera.orthographicSize = this.gameplayCameraSize;
+        StartCoroutine(this.LoadGameScene());
+        yield return null;
     }
 
     private IEnumerator LoadGameScene()
@@ -59,8 +104,6 @@ public class GameConsole : MonoBehaviour
 
         yield return null;
 
-        //GameObject test = GameObject.FindGameObjectWithTag("LevelParent");
-
         this.levelGeometry = GameObject.Find("LevelPivot").GetComponent<LevelManipulator>();
         CameraFollow.instance.playerCharacter = GameObject.Find("Table");
 
@@ -70,16 +113,19 @@ public class GameConsole : MonoBehaviour
             CameraFollow.instance.transform.position.z);
 
         CameraFollow.instance.playerRb = CameraFollow.instance.playerCharacter.GetComponent<Rigidbody>();
+
+        this.gameScreen.material = this.gameplayRenderTexture;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (this.currentInput.objectClicked == "ConsoleScreen")
+        if (GameManager.instance.currentState != GameState.MainGame && 
+            GameManager.instance.currentState != GameState.GameOver)
         {
-            this.TranslateConsole();
-            //this.ResetRotation();
+            return;
         }
+
         else if (this.currentInput.objectClicked == "TiltButton")
         {
             this.RotateConsole();
@@ -89,7 +135,6 @@ public class GameConsole : MonoBehaviour
             this.TranslateConsole();
             this.ResetRotation();
         }
-
     }
 
     private void TranslateConsole()

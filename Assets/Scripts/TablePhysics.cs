@@ -68,6 +68,14 @@ public class TablePhysics : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.currentState == GameState.GameOver)
+        {
+            this.tableRb.velocity = Vector3.zero;
+            this.tableRb.angularVelocity = Vector3.zero;
+            this.tableRb.useGravity = false;
+            return;
+        }
+        
         //this.tableRb.centerOfMass = this.centerOfMassObject.transform.localPosition;
 
         RaycastHit hit;

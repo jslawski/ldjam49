@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+public enum GameState { Cutscene, Title, MainGame, GameOver }
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -12,9 +14,12 @@ public class GameManager : MonoBehaviour
 
     private float score;
 
+    public GameState currentState = GameState.Cutscene;
+
     //UI Stuff
     public TextMeshProUGUI matchbookText;
     public TextMeshProUGUI letterText;
+    public GameObject resultsScreen;
 
     private void Awake()
     {
@@ -52,5 +57,19 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
 
         this.matchbookText.text = "";
+    }
+
+    public void ShowResultsScreen()
+    {
+        this.resultsScreen.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        this.currentState = GameState.MainGame;
+
+        this.matchbooksCollected = 0;
+        this.lettersCollected = 0;
+        this.score = 0;
     }
 }

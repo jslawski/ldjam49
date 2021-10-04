@@ -41,6 +41,10 @@ public class InputManager : MonoBehaviour
         {
             this.CastRay();
         }
+        /*else if (GameManager.instance.currentState == GameState.GameOver)
+        {
+
+        }*/
 
         /*if (Input.GetMouseButtonUp(0) == true)
         {
@@ -50,6 +54,8 @@ public class InputManager : MonoBehaviour
 
     private void CastRay()
     {
+        Debug.LogError("Cast Ray Called");
+
         Ray ray = this.frameCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
@@ -65,7 +71,7 @@ public class InputManager : MonoBehaviour
 
             //Debug.LogError("Object: " + hit.collider.gameObject.name + " Tag: " + this.objectClicked);
 
-            if (this.dragCoroutine == null)
+            if (this.dragCoroutine == null && GameManager.instance.currentState != GameState.GameOver)
             {
                 StartCoroutine(this.UpdateDrag());
             }
