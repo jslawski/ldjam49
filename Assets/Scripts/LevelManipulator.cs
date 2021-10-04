@@ -40,7 +40,6 @@ public class LevelManipulator : MonoBehaviour
 
     public void TranslateLevel(Vector3 velocity)
     {
-        Debug.LogError("Velocity: " + velocity);
         Vector3 targetPosition = this.levelPivotRb.position + (this.translateAmplifier * velocity * Time.fixedDeltaTime);
         this.levelPivotRb.MovePosition(targetPosition);
     }

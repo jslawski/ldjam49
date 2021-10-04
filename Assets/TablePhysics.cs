@@ -48,7 +48,7 @@ public class TablePhysics : MonoBehaviour
     {
         RaycastHit hit;
 
-        this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 2.5f);
+        this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 2.0f);
 
         if (this.isAirborne == true)
         {
@@ -59,7 +59,7 @@ public class TablePhysics : MonoBehaviour
             this.customGravityOn = false;
         }
 
-        if (this.currentInput.objectClicked == "TiltButton")
+        if (this.currentInput.objectClicked == "TiltButton" && Input.GetMouseButton(0))
         {
             this.isTilted = true;
 
@@ -83,16 +83,6 @@ public class TablePhysics : MonoBehaviour
         {
             this.isTilted = false;
         }
-
-        //If upside down in the air
-        if (isAirborne && this.transform.up.y < -0.5f)
-        {
-            this.shouldFlip = true;
-        }
-        else
-        {
-            this.shouldFlip = false;
-        }
     }
 
     private void FixedUpdate()
@@ -102,7 +92,7 @@ public class TablePhysics : MonoBehaviour
             this.tableRb.AddForce(-Vector3.up * this.customGravity, ForceMode.Acceleration);
         }
        
-        if (this.isTilted)
+        if (this.isTilted == true)
         {
             if (this.isAirborne == false)
             {
@@ -112,6 +102,8 @@ public class TablePhysics : MonoBehaviour
             {
                 Vector3 forceDirection = Vector3.up;
                 Vector3 forcePosition = new Vector3(this.transform.position.x - this.tiltDirection, 0f, 0f);
+
+                Debug.LogError("Adding for to " + tiltDirection + " side");
 
                 this.tableRb.AddForceAtPosition(forceDirection * this.flipMagnitude, forcePosition);
             }
