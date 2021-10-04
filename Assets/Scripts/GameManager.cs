@@ -33,6 +33,13 @@ public class GameManager : MonoBehaviour
 
     public Timer gameTimer;
 
+    public AudioClip[] skaSongs;
+    public AudioSource gameMusic;
+    public AudioSource matchbookSound;
+    public AudioSource letterSound;
+    public AudioSource rollSound;
+    public AudioSource grindSound;
+
     private void Awake()
     {
         if (instance == null)
@@ -41,13 +48,39 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void PlayRollSound()
+    {
+        if (this.rollSound.isPlaying == false)
+        {
+            this.grindSound.Stop();
+            this.rollSound.Play();
+        }
+    }
+
+    public void PlayGrindSound()
+    {
+        if (this.grindSound.isPlaying == false)
+        {
+            this.rollSound.Stop();
+            this.grindSound.Play();
+        }
+    }
+
+    public void StopMoveSounds()
+    {
+        this.grindSound.Stop();
+        this.rollSound.Stop();
+    }
+
     public void CollectMatchbook()
     {
         this.matchesCounter.sprite = this.matchesImages[this.matchbooksCollected];
         this.matchbooksCollected++;
 
         this.matchesCounter.gameObject.SetActive(true);
-        
+
+        this.matchbookSound.Play();
+
         StartCoroutine(this.DisplayMatchbookCollected());
     }
 
@@ -74,6 +107,8 @@ public class GameManager : MonoBehaviour
                 this.tableCounter[4].SetActive(true);
                 break;
         }
+
+        this.letterSound.Play();
     }
 
     public IEnumerator DisplayLetterCollected(string letter)
@@ -114,6 +149,9 @@ public class GameManager : MonoBehaviour
 
         this.matchesCounter.sprite = this.matchesImages[0];
         this.matchesCounter.gameObject.SetActive(false);
+
+        this.gameMusic.clip = this.skaSongs[Random.Range(0, this.skaSongs.Length)];
+        this.gameMusic.Play();
 
         GameManager.instance.gameTimer.gameObject.SetActive(true);
         this.gameTimer.StartTimer(0);

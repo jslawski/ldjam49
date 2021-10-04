@@ -73,11 +73,10 @@ public class TablePhysics : MonoBehaviour
             this.tableRb.velocity = Vector3.zero;
             this.tableRb.angularVelocity = Vector3.zero;
             this.tableRb.useGravity = false;
+            GameManager.instance.StopMoveSounds();
             return;
         }
         
-        //this.tableRb.centerOfMass = this.centerOfMassObject.transform.localPosition;
-
         RaycastHit hit;
 
         this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.gameObject.transform.lossyScale.x * this.tableLeg.height * 2.0f);
@@ -116,6 +115,29 @@ public class TablePhysics : MonoBehaviour
         else
         {
             this.isTilted = false;
+        }
+
+        bool isRolling = this.tableRb.SweepTest(-this.transform.up, out hit, this.tableLeg.gameObject.transform.lossyScale.x * this.tableLeg.height);
+        bool isGrinding = this.tableRb.SweepTest(this.transform.up, out hit, this.tableLeg.gameObject.transform.lossyScale.x * this.tableLeg.height) &&
+            this.transform.up.y < 0;
+
+        if (Mathf.Abs(this.transform.up.x) > Mathf.Abs(this.transform.up.y))
+        {
+            isGrinding = this.tableRb.SweepTest(this.transform.right, out hit, this.tableLeg.gameObject.transform.lossyScale.x * this.tableLeg.height) ||
+                this.tableRb.SweepTest(-this.transform.right, out hit, this.tableLeg.gameObject.transform.lossyScale.x * this.tableLeg.height); ;
+        }
+
+        if (isRolling && Mathf.Abs(this.tableRb.velocity.x) > 5f)
+        {
+            GameManager.instance.PlayRollSound();
+        }
+        else if (isGrinding && Mathf.Abs(this.tableRb.velocity.x) > 5f)
+        {
+            GameManager.instance.PlayGrindSound();
+        }
+        else
+        {
+            GameManager.instance.StopMoveSounds();
         }
     }
 

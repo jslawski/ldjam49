@@ -8082,6 +8082,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2080053603}
     m_Modifications:
+    - target: {fileID: 3474092270374366485, guid: 5c7447c68cb8441478ca818178699b76, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5261996004683612689, guid: 5c7447c68cb8441478ca818178699b76, type: 3}
       propertyPath: m_RootOrder
       value: 121
@@ -8536,6 +8540,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14d3db31477082e4c931963f84935fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!81 &1223502496
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223502491}
+  m_Enabled: 1
 --- !u!1001 &1270140365
 PrefabInstance:
   m_ObjectHideFlags: 0

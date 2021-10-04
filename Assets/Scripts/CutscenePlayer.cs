@@ -12,7 +12,7 @@ public class CutscenePlayer : MonoBehaviour
 
     private void Awake()
     {
-        string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "introCutscene.mp4");
+        string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "skateVideo.mp4");
         this.cutscenePlayer.url = filePath;
 
         this.cutscenePlayer.renderMode = VideoRenderMode.RenderTexture;

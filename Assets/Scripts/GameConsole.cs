@@ -51,8 +51,8 @@ public class GameConsole : MonoBehaviour
 
     //Cutscene stuff
     private Coroutine transitionCoroutine;
-    private float timeBeforeZoomOut = 4.0f;
-    private float zoomOutSpeed = 3.0f;
+    private float timeBeforeZoomOut = 24.0f;
+    private float zoomOutSpeed = 1.5f;
     private float cutsceneCameraSize = 3.2f;
     private float gameplayCameraSize = 6.0f;
 

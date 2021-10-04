@@ -13,9 +13,32 @@ public class TitleScreen : MonoBehaviour
 
     private float timeBeforeAwaitingInput = 1.0f;
 
+    private AudioSource music;
+
     private void Start()
     {
         StartCoroutine(this.WaitForTap());
+
+        this.music = GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+        if (GameManager.instance.currentState == GameState.Title)
+        {
+            if (this.music.isPlaying == false)
+            {
+                this.music.Play();
+            }
+        }
+        else if (this.music.isPlaying == true)
+        {
+            this.music.Stop();
+        }
+    }
+    private void OnDisable()
+    {
+        GetComponent<AudioSource>().Stop();
     }
 
     private IEnumerator WaitForTap()
@@ -26,6 +49,9 @@ public class TitleScreen : MonoBehaviour
         {
             yield return null;
         }
+
+        GameManager.instance.gameMusic.clip = GameManager.instance.skaSongs[Random.Range(0, GameManager.instance.skaSongs.Length)];
+        GameManager.instance.gameMusic.Play();
 
         GameManager.instance.currentState = GameState.MainGame;
         GameManager.instance.gameTimer.StartTimer(0);
