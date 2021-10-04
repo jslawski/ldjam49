@@ -4587,7 +4587,7 @@ MonoBehaviour:
   percentageOfMaxXDistance: 0
   objectClicked: 
   tiltButtonClicked: 0
-  sceneToLoadName: GameplayScene
+  sceneToLoadName: SetupScene
 --- !u!1 &1425281362
 GameObject:
   m_ObjectHideFlags: 0
