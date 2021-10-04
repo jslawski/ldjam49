@@ -31,6 +31,7 @@ public class CutscenePlayer : MonoBehaviour
         if (!this.cutscenePlayer.isPlaying && this.hasStarted == true)
         {
             GameManager.instance.currentState = GameState.MainGame;
+            GameManager.instance.gameTimer.StartTimer(0);
             this.gameObject.SetActive(false);
         }
     }

@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject[] tableCounter;
 
+    public Timer gameTimer;
+
     private void Awake()
     {
         if (instance == null)
