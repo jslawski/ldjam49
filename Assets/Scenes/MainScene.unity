@@ -1827,6 +1827,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4a9a9d57f110a4a93b87a5c4f3627b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildingLayer1: {fileID: 914846770}
+  buildingLayer2: {fileID: 1993061476}
   matchbooksCollected: 0
   currentState: 0
   matchbookText: {fileID: 915050994}

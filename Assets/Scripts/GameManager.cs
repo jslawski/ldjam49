@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public GameObject buildingLayer1;
+    public GameObject buildingLayer2;
+
     public int matchbooksCollected = 0;
     private int lettersCollected = 0;
 
