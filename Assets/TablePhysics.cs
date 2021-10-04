@@ -31,7 +31,9 @@ public class TablePhysics : MonoBehaviour
     private float currentTiltAcceleration = 0f;
 
     private bool shouldFlip = false;
-    private float flipMagnitude = 30f;
+    private float flipMagnitude = 50f;
+
+    private bool isAirborne = false;
 
     // Start is called before the first frame update
     void Start()
@@ -46,12 +48,11 @@ public class TablePhysics : MonoBehaviour
     {
         RaycastHit hit;
 
-        bool isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 3.0f);
+        this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 3.0f);
 
-        if (isAirborne == true)
+        if (this.isAirborne == true)
         {
             this.customGravityOn = true;
-            Debug.LogError("AIRBORNE");
         }
         else
         {
@@ -62,18 +63,21 @@ public class TablePhysics : MonoBehaviour
         {
             this.isTilted = true;
 
-            this.tiltDirection = (int)this.currentInput.tiltButtonClicked * this.currentInput.dragDirection.y;
-
-            if (this.tiltDirection < 0.0f)
+            if (this.isAirborne == false)
             {
-                this.tiltDirection = 1.0f;
-            }
-            else
-            {
-                this.tiltDirection = -1.0f;
-            }
+                this.tiltDirection = (int)this.currentInput.tiltButtonClicked * this.currentInput.dragDirection.y;
 
-            this.currentTiltAcceleration = Mathf.Lerp(0, this.maxTiltAcceleration, this.currentInput.percentageOfMaxYDistance);
+                if (this.tiltDirection < 0.0f)
+                {
+                    this.tiltDirection = 1.0f;
+                }
+                else
+                {
+                    this.tiltDirection = -1.0f;
+                }
+
+                this.currentTiltAcceleration = Mathf.Lerp(0, this.maxTiltAcceleration, this.currentInput.percentageOfMaxYDistance);
+            }
         }
         else
         {
@@ -83,7 +87,6 @@ public class TablePhysics : MonoBehaviour
         //If upside down in the air
         if (isAirborne && this.transform.up.y < -0.5f)
         {
-            Debug.LogError("Should flip!");
             this.shouldFlip = true;
         }
         else
@@ -101,21 +104,30 @@ public class TablePhysics : MonoBehaviour
        
         if (this.isTilted)
         {
-            this.tableRb.AddForce(this.levelGeometry.transform.right * this.tiltDirection * this.currentTiltAcceleration, ForceMode.Acceleration); ;
+            if (this.isAirborne == false)
+            {
+                this.tableRb.AddForce(this.levelGeometry.transform.right * this.tiltDirection * this.currentTiltAcceleration, ForceMode.Acceleration); ;
+            }
+            else
+            {
+                Vector3 forceDirection = Vector3.up;
+                Vector3 forcePosition = new Vector3(this.transform.position.x - this.tiltDirection, 0f, 0f);
+
+                this.tableRb.AddForceAtPosition(forceDirection * this.flipMagnitude, forcePosition);
+            }
         }
 
         if (this.tableRb.velocity.magnitude > this.maxSpeed)
         {
-            Debug.LogError("LIMITED");
             this.tableRb.velocity = this.tableRb.velocity.normalized * this.maxSpeed;
         }
 
-        if (this.shouldFlip == true)
+        /*if (this.shouldFlip == true)
         {
             Vector3 forceDirection = new Vector3(0f, this.currentInput.dragDirection.y, 0f);
             Vector3 forcePosition = new Vector3(this.transform.position.x - this.currentInput.dragDirection.x, 0f, 0f);
 
             this.tableRb.AddForceAtPosition(forceDirection * this.flipMagnitude, forcePosition);
-        }
+        }*/
     }
 }
