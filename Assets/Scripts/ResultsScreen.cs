@@ -26,7 +26,7 @@ public class ResultsScreen : MonoBehaviour
             yield return null;
         }
 
-        SceneManager.UnloadSceneAsync("GameplayScene");
+        SceneManager.UnloadSceneAsync(this.currentInput.sceneToLoadName);
         this.gameConsole.ReloadLevel();
         GameManager.instance.RestartGame();
         this.gameObject.SetActive(false);
