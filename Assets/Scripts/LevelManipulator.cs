@@ -15,7 +15,7 @@ public class LevelManipulator : MonoBehaviour
 
     private float translateAmplifier = 1.5f;
     private float rotateAmplifier = 0.2f;
-    private float rotateSpeedAmplifier = 3f;
+    private float rotateSpeedAmplifier = 1f;
 
     [SerializeField]
     private Camera gameCamera;
@@ -54,6 +54,8 @@ public class LevelManipulator : MonoBehaviour
 
     public void RotateLevel(Vector3 targetRotation)
     {
+        return;
+
         if (this.levelPivotRb.transform.rotation.eulerAngles.z <= 0.05f)
         {
             this.currentRotationPoint = new Vector3(
@@ -61,12 +63,15 @@ public class LevelManipulator : MonoBehaviour
                 this.gameCamera.transform.position.y,
                 this.transform.position.z);
 
-            this.levelPivotRb.MovePosition(this.startingPosition);
+            this.levelPivotRb.MovePosition(Vector3.Lerp(this.transform.position, this.startingPosition, Time.fixedDeltaTime));
         }
 
         float rotationAngle = targetRotation.z;
 
-        Quaternion rotationQ = Quaternion.Euler(new Vector3(0,0,Mathf.DeltaAngle(this.levelParent.transform.eulerAngles.z, rotationAngle * this.rotateAmplifier)) * this.rotateSpeedAmplifier * Time.fixedDeltaTime);
+        Quaternion rotationQ = Quaternion.Euler(new Vector3(0,0,
+            Mathf.DeltaAngle(this.levelParent.transform.eulerAngles.z, rotationAngle * this.rotateAmplifier)) * 
+            this.rotateSpeedAmplifier * Time.fixedDeltaTime);
+
         Vector3 translationVector = this.levelPivotRb.transform.position - this.currentRotationPoint;
 
         this.levelPivotRb.MovePosition(rotationQ * translationVector + this.currentRotationPoint);

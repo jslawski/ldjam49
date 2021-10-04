@@ -33,7 +33,7 @@ public class TablePhysics : MonoBehaviour
     private bool shouldFlip = false;
     private float flipMagnitude = 50f;
 
-    private bool isAirborne = false;
+    public bool isAirborne = false;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +48,7 @@ public class TablePhysics : MonoBehaviour
     {
         RaycastHit hit;
 
-        this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 2.0f);
+        this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.gameObject.transform.lossyScale.x * this.tableLeg.height * 2.0f);
 
         if (this.isAirborne == true)
         {
@@ -100,8 +100,8 @@ public class TablePhysics : MonoBehaviour
             }
             else
             {
-                Vector3 forceDirection = Vector3.up;
-                Vector3 forcePosition = new Vector3(this.transform.position.x - this.tiltDirection, 0f, 0f);
+                Vector3 forceDirection = Vector3.right * this.tiltDirection;
+                Vector3 forcePosition = new Vector3(this.transform.position.x, this.transform.position.y + 5.0f, this.transform.position.z);
 
                 Debug.LogError("Adding for to " + tiltDirection + " side");
 
