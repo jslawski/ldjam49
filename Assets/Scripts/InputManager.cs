@@ -86,7 +86,7 @@ public class InputManager : MonoBehaviour
 
             //Debug.LogError("Object: " + hit.collider.gameObject.name + " Tag: " + this.objectClicked);
 
-            if (this.dragCoroutine == null && GameManager.instance.currentState != GameState.GameOver)
+            if (this.dragCoroutine == null && GameManager.instance.currentState != GameState.GameOver && GameManager.instance.currentState != GameState.Title)
             {
                 StartCoroutine(this.UpdateDrag());
             }
