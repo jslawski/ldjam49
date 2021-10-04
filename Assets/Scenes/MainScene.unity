@@ -5201,7 +5201,7 @@ MonoBehaviour:
   objectHovered: 
   tiltButtonClicked: 0
   tiltButtonHovered: 0
-  sceneToLoadName: GameplayScene
+  sceneToLoadName: SetupScene
 --- !u!1 &1425281362
 GameObject:
   m_ObjectHideFlags: 0
