@@ -63,6 +63,12 @@ public class GameConsole : MonoBehaviour
 
         this.levelGeometry = GameObject.Find("LevelPivot").GetComponent<LevelManipulator>();
         CameraFollow.instance.playerCharacter = GameObject.Find("Table");
+
+        CameraFollow.instance.transform.position = new Vector3(
+            CameraFollow.instance.playerCharacter.transform.position.x,
+            CameraFollow.instance.playerCharacter.transform.position.y,
+            CameraFollow.instance.transform.position.z);
+
         CameraFollow.instance.playerRb = CameraFollow.instance.playerCharacter.GetComponent<Rigidbody>();
     }
 
