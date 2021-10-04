@@ -53,7 +53,7 @@ public class GameConsole : MonoBehaviour
     private Coroutine transitionCoroutine;
     private float timeBeforeZoomOut = 4.0f;
     private float zoomOutSpeed = 3.0f;
-    private float cutsceneCameraSize = 4.4f;
+    private float cutsceneCameraSize = 3.2f;
     private float gameplayCameraSize = 6.0f;
 
     // Start is called before the first frame update

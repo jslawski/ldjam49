@@ -9,6 +9,7 @@ public class FinishLine : MonoBehaviour
         if (other.tag == "Table")
         {
             GameManager.instance.currentState = GameState.GameOver;
+            GameManager.instance.gameTimer.Pause();
             GameManager.instance.ShowResultsScreen();
         }
     }
