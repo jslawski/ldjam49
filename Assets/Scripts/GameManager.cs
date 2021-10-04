@@ -21,6 +21,13 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI letterText;
     public GameObject resultsScreen;
 
+    [SerializeField]
+    private SpriteRenderer matchesCounter;
+    [SerializeField]
+    private Sprite[] matchesImages;
+    [SerializeField]
+    private GameObject[] tableCounter;
+
     private void Awake()
     {
         if (instance == null)
@@ -31,7 +38,11 @@ public class GameManager : MonoBehaviour
 
     public void CollectMatchbook()
     {
+        this.matchesCounter.sprite = this.matchesImages[this.matchbooksCollected];
         this.matchbooksCollected++;
+
+        this.matchesCounter.gameObject.SetActive(true);
+        
         StartCoroutine(this.DisplayMatchbookCollected());
     }
 
@@ -39,6 +50,25 @@ public class GameManager : MonoBehaviour
     {
         this.lettersCollected++;
         StartCoroutine(this.DisplayLetterCollected(letter));
+
+        switch (letter)
+        {
+            case "T":
+                this.tableCounter[0].SetActive(true);
+                break;
+            case "A":
+                this.tableCounter[1].SetActive(true);
+                break;
+            case "B":
+                this.tableCounter[2].SetActive(true);
+                break;
+            case "L":
+                this.tableCounter[3].SetActive(true);
+                break;
+            case "E":
+                this.tableCounter[4].SetActive(true);
+                break;
+        }
     }
 
     public IEnumerator DisplayLetterCollected(string letter)
@@ -71,5 +101,13 @@ public class GameManager : MonoBehaviour
         this.matchbooksCollected = 0;
         this.lettersCollected = 0;
         this.score = 0;
+
+        for (int i = 0; i < 5; i++)
+        {
+            this.tableCounter[i].SetActive(false);
+        }
+
+        this.matchesCounter.sprite = this.matchesImages[0];
+        this.matchesCounter.gameObject.SetActive(false);
     }
 }
