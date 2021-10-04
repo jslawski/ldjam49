@@ -163,7 +163,7 @@ public class GameConsole : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.instance.currentState == GameState.MainGame)
+        if (GameManager.instance.currentState == GameState.MainGame || GameManager.instance.currentState == GameState.GameOver)
         {
             this.UpdateVisualState();
         }
