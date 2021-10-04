@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject buildingLayer2;
 
     public int matchbooksCollected = 0;
-    private int lettersCollected = 0;
+    public int lettersCollected = 0;
 
     private float score;
 

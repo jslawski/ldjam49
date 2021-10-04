@@ -10,7 +10,7 @@ public class Timer : MonoBehaviour
     public bool IsPaused = true;
 
     [SerializeField]
-    private Text TimerText;
+    public Text TimerText;
 
     void Update()
     {
