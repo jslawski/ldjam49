@@ -84,8 +84,6 @@ public class TablePhysics : MonoBehaviour
 
         if (this.isAirborne == true)
         {
-            Debug.LogError("I'm airborne!");
-
             this.customGravityOn = true;
 
             this.newTouch = false;

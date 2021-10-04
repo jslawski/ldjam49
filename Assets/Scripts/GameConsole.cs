@@ -44,11 +44,16 @@ public class GameConsole : MonoBehaviour
 
     private bool cutsceneFinished = false;
 
+    [SerializeField]
+    private Sprite[] consoleSprites;
+    [SerializeField]
+    private SpriteRenderer currentSprite;
+
     //Cutscene stuff
     private Coroutine transitionCoroutine;
     private float timeBeforeZoomOut = 4.0f;
     private float zoomOutSpeed = 3.0f;
-    private float cutsceneCameraSize = 3.3f;
+    private float cutsceneCameraSize = 4.4f;
     private float gameplayCameraSize = 6.0f;
 
     // Start is called before the first frame update
@@ -117,7 +122,53 @@ public class GameConsole : MonoBehaviour
         this.gameScreen.material = this.gameplayRenderTexture;
     }
 
-    // Update is called once per frame
+    private void UpdateVisualState()
+    {
+        this.currentSprite.sprite = this.consoleSprites[0];
+
+        if (this.currentInput.objectHovered == "ConsoleScreen")
+        {
+            this.currentSprite.sprite = this.consoleSprites[3];
+        }
+
+        if (this.currentInput.objectHovered == "TiltButton")
+        {
+            if (this.currentInput.tiltButtonHovered == TiltButton.Left)
+            {
+                this.currentSprite.sprite = this.consoleSprites[1];
+            }
+            else
+            {
+                this.currentSprite.sprite = this.consoleSprites[5];
+            }
+        }
+
+        if (this.currentInput.objectUIClicked == "ConsoleScreen")
+        {
+            this.currentSprite.sprite = this.consoleSprites[4];
+        }
+
+        if (this.currentInput.objectUIClicked == "TiltButton")
+        {
+            if (this.currentInput.tiltButtonHovered == TiltButton.Left)
+            {
+                this.currentSprite.sprite = this.consoleSprites[2];
+            }
+            else
+            {
+                this.currentSprite.sprite = this.consoleSprites[6];
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (GameManager.instance.currentState == GameState.MainGame)
+        {
+            this.UpdateVisualState();
+        }
+    }
+
     void FixedUpdate()
     {
         if (GameManager.instance.currentState != GameState.MainGame && 

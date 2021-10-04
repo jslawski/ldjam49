@@ -29,8 +29,11 @@ public class InputManager : MonoBehaviour
     public float percentageOfMaxXDistance = 0.0f;
 
     public string objectClicked = "";
+    public string objectUIClicked = "";
+    public string objectHovered = "";
 
     public TiltButton tiltButtonClicked = TiltButton.None;
+    public TiltButton tiltButtonHovered = TiltButton.None;
 
     public string sceneToLoadName = "GameplayScene";
 
@@ -40,28 +43,40 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) == true)
         {
             this.CastRay();
+            this.objectHovered = "";
         }
-        /*else if (GameManager.instance.currentState == GameState.GameOver)
+        else if (Input.GetMouseButton(0) == false)
         {
+            this.CastHoverRay();
+            this.objectUIClicked = "";
+        }
+    }
 
-        }*/
+    private void CastHoverRay()
+    {
+        Ray ray = this.frameCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
-        /*if (Input.GetMouseButtonUp(0) == true)
+        if (Physics.Raycast(ray, out hit))
         {
-            this.objectClicked = "";
-        }*/
+            this.objectHovered = hit.collider.gameObject.tag;
+
+            if (this.objectHovered == "TiltButton")
+            {
+                this.tiltButtonHovered = this.frameCamera.ScreenToViewportPoint(Input.mousePosition).x < 0.5f ? TiltButton.Left : TiltButton.Right;
+            }
+        }
     }
 
     private void CastRay()
     {
-        Debug.LogError("Cast Ray Called");
-
         Ray ray = this.frameCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
         {
             this.objectClicked = hit.collider.gameObject.tag;
+            this.objectUIClicked = hit.collider.gameObject.tag;
 
             if (this.objectClicked == "TiltButton")
             {
