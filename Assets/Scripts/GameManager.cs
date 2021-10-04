@@ -114,5 +114,7 @@ public class GameManager : MonoBehaviour
 
         this.matchesCounter.sprite = this.matchesImages[0];
         this.matchesCounter.gameObject.SetActive(false);
+
+        this.gameTimer.StartTimer(0);
     }
 }
