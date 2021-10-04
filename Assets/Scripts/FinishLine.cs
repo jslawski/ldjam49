@@ -10,6 +10,7 @@ public class FinishLine : MonoBehaviour
         {
             GameManager.instance.currentState = GameState.GameOver;
             GameManager.instance.gameTimer.Pause();
+            GameManager.instance.gameTimer.gameObject.SetActive(false);
             GameManager.instance.ShowResultsScreen();
         }
     }

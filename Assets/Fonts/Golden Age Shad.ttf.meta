@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 7ffe0ae073897664093e5ff9730190e6
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Golden Age
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: a337aba383d9068499b3ac89291bfa3d, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

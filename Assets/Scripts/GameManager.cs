@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator DisplayLetterCollected(string letter)
     {
-        this.matchbookText.text = ("LETTER\n" + letter + "\nCOLLECTED!");
+        this.matchbookText.text = ("LETTER\n\n" + letter + "\n\nCOLLECTED!");
 
         yield return new WaitForSeconds(2.0f);
 
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator DisplayMatchbookCollected()
     {
-        this.matchbookText.text = ("MATCHBOOK COLLECTED!");
+        this.matchbookText.text = ("MATCHBOOK\n\nCOLLECTED!");
 
         yield return new WaitForSeconds(2.0f);
 
@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour
         this.matchesCounter.sprite = this.matchesImages[0];
         this.matchesCounter.gameObject.SetActive(false);
 
+        GameManager.instance.gameTimer.gameObject.SetActive(true);
         this.gameTimer.StartTimer(0);
     }
 }
