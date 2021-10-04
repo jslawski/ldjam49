@@ -8,6 +8,7 @@ TagManager:
   - TiltButton
   - LevelParent
   - Table
+  - Matchbook
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - ClickCollider
   - Wall
   - DeskBackground
-  - 
+  - Collectible
   - 
   - 
   - 

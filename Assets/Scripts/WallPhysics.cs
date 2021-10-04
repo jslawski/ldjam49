@@ -20,8 +20,6 @@ public class WallPhysics : MonoBehaviour
             return;
         }
 
-        Debug.LogError("Impulse X: " + collision.impulse.x);
-
         if (collision.collider.gameObject.tag == "Table" && Mathf.Abs(collision.impulse.x) > this.minImpulseNeeded)
         {
             if (this.transform.position.x < collision.gameObject.transform.position.x)

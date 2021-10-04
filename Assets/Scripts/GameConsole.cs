@@ -136,32 +136,18 @@ public class GameConsole : MonoBehaviour
 
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, 
             Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z), 
-            10.0f * Time.fixedDeltaTime);
-       
-        /*if (Mathf.Abs(this.transform.rotation.eulerAngles.z - targetRotation.z) < 0.01f)
-        {
-            this.transform.rotation = Quaternion.Euler(targetRotation.x, targetRotation.y, 0f);
-           
-            if (this.levelGeometry.levelPivotObject != null)
-            {
-                Debug.LogError("TRIGGERED");
-                this.levelGeometry.RotateLevel(targetRotation);
-                this.levelGeometry.DestroyPivot();
-            }
-            
-            return;
-        }*/
+            this.rotateSpeed * Time.fixedDeltaTime);
 
         this.levelGeometry.RotateLevel(targetRotation);
     }
 
     private void ResetRotation()
     {
-        if (this.transform.rotation.eulerAngles.z <= 0.001f)
+        if (this.levelGeometry == null)
         {
             return;
         }
-
+        
         float tiltDirection = this.transform.rotation.eulerAngles.z;
 
         float targetAngle = 0.0f;
@@ -181,22 +167,8 @@ public class GameConsole : MonoBehaviour
 
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation,
             Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z),
-            10.0f * Time.fixedDeltaTime);
+            this.rotateSpeed * Time.fixedDeltaTime);
 
-        /*if (Mathf.Abs(this.transform.rotation.eulerAngles.z - targetRotation.z) < 0.01f)
-        {
-            this.transform.rotation = Quaternion.Euler(targetRotation.x, targetRotation.y, 0f);
-
-            if (this.levelGeometry.levelPivotObject != null)
-            {
-                Debug.LogError("TRIGGERED IN RESET");
-                this.levelGeometry.RotateLevel(targetRotation);
-                this.levelGeometry.DestroyPivot();
-            }
-
-            return;
-        }
-        */
         this.levelGeometry.RotateLevel(targetRotation);
     }
 }
