@@ -16,6 +16,9 @@ public class TablePhysics : MonoBehaviour
     [SerializeField]
     private CapsuleCollider tableLeg;
 
+    [SerializeField]
+    private GameObject centerOfMassObject;
+
     private bool customGravityOn = false;
     private float customGravity = 75f;
 
@@ -31,9 +34,15 @@ public class TablePhysics : MonoBehaviour
     private float currentTiltAcceleration = 0f;
 
     private bool shouldFlip = false;
-    private float flipMagnitude = 50f;
+    private float flipMagnitude = 10f;
+
+    private float upwardVelocityNeededToFlip = 10f;
 
     public bool isAirborne = false;
+
+    private Vector3 originalCenterOfMass;
+
+    private bool newTouch = false;
 
     // Start is called before the first frame update
     void Start()
@@ -41,18 +50,37 @@ public class TablePhysics : MonoBehaviour
         this.tableRb = this.gameObject.GetComponent<Rigidbody>();
         this.tableRb.maxAngularVelocity = 5f;
         this.currentInput = GameObject.Find("GameConsole").GetComponent<InputManager>();
+
+        this.originalCenterOfMass = this.tableRb.centerOfMass;
+
+        //this.centerOfMassObject.transform.localPosition = this.originalCenterOfMass;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (this.newTouch == false)
+        {
+            this.newTouch = true;
+            this.tableRb.angularVelocity = Vector3.zero;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        //this.tableRb.centerOfMass = this.centerOfMassObject.transform.localPosition;
+
         RaycastHit hit;
 
         this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.gameObject.transform.lossyScale.x * this.tableLeg.height * 2.0f);
 
         if (this.isAirborne == true)
         {
+            Debug.LogError("I'm airborne!");
+
             this.customGravityOn = true;
+
+            this.newTouch = false;
         }
         else
         {
@@ -103,7 +131,7 @@ public class TablePhysics : MonoBehaviour
                 Vector3 forceDirection = Vector3.right * this.tiltDirection;
                 Vector3 forcePosition = new Vector3(this.transform.position.x, this.transform.position.y + 5.0f, this.transform.position.z);
 
-                Debug.LogError("Adding for to " + tiltDirection + " side");
+                //Debug.LogError("Adding for to " + tiltDirection + " side");
 
                 this.tableRb.AddForceAtPosition(forceDirection * this.flipMagnitude, forcePosition);
             }
