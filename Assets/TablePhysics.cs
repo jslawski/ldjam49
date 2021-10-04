@@ -39,7 +39,7 @@ public class TablePhysics : MonoBehaviour
     void Start()
     {
         this.tableRb = this.gameObject.GetComponent<Rigidbody>();
-
+        this.tableRb.maxAngularVelocity = 5f;
         this.currentInput = GameObject.Find("GameConsole").GetComponent<InputManager>();
     }
 
@@ -48,7 +48,7 @@ public class TablePhysics : MonoBehaviour
     {
         RaycastHit hit;
 
-        this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 3.0f);
+        this.isAirborne = !this.tableRb.SweepTest(-Vector3.up, out hit, this.tableLeg.height * 2.5f);
 
         if (this.isAirborne == true)
         {
@@ -63,19 +63,19 @@ public class TablePhysics : MonoBehaviour
         {
             this.isTilted = true;
 
+            this.tiltDirection = (int)this.currentInput.tiltButtonClicked * this.currentInput.dragDirection.y;
+
+            if (this.tiltDirection < 0.0f)
+            {
+                this.tiltDirection = 1.0f;
+            }
+            else
+            {
+                this.tiltDirection = -1.0f;
+            }
+
             if (this.isAirborne == false)
             {
-                this.tiltDirection = (int)this.currentInput.tiltButtonClicked * this.currentInput.dragDirection.y;
-
-                if (this.tiltDirection < 0.0f)
-                {
-                    this.tiltDirection = 1.0f;
-                }
-                else
-                {
-                    this.tiltDirection = -1.0f;
-                }
-
                 this.currentTiltAcceleration = Mathf.Lerp(0, this.maxTiltAcceleration, this.currentInput.percentageOfMaxYDistance);
             }
         }
@@ -121,13 +121,5 @@ public class TablePhysics : MonoBehaviour
         {
             this.tableRb.velocity = this.tableRb.velocity.normalized * this.maxSpeed;
         }
-
-        /*if (this.shouldFlip == true)
-        {
-            Vector3 forceDirection = new Vector3(0f, this.currentInput.dragDirection.y, 0f);
-            Vector3 forcePosition = new Vector3(this.transform.position.x - this.currentInput.dragDirection.x, 0f, 0f);
-
-            this.tableRb.AddForceAtPosition(forceDirection * this.flipMagnitude, forcePosition);
-        }*/
     }
 }
