@@ -32,6 +32,8 @@ public class InputManager : MonoBehaviour
 
     public TiltButton tiltButtonClicked = TiltButton.None;
 
+    public string sceneToLoadName = "GameplayScene";
+
     // Update is called once per frame
     void Update()
     {

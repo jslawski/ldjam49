@@ -49,7 +49,7 @@ public class GameConsole : MonoBehaviour
 
     private IEnumerator LoadGameScene()
     {
-        SceneManager.LoadScene("GameplayScene", LoadSceneMode.Additive);
+        SceneManager.LoadScene(this.currentInput.sceneToLoadName, LoadSceneMode.Additive);
 
         while (SceneManager.sceneCount < 2)
         {
